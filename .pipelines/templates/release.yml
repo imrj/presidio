@@ -1,6 +1,6 @@
 jobs:
 - job: 'Version'
-  displayName: 'get version'
+  displayName: 'Get version'
   steps:
     - bash: |
         ver=$(cat VERSION)
