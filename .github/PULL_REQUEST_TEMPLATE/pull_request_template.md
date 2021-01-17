@@ -12,5 +12,5 @@ This PR fixes issue #XX
 - [ ] My code includes unit tests
 - [ ] All unit tests and lint checks pass locally
 - [ ] My PR contains documentation updates / additions if required
-- [ ] I have updated VERSION file with the appropriate version bump.
+- [ ] I have updated VERSION file with the appropriate version bump
 PR: 
