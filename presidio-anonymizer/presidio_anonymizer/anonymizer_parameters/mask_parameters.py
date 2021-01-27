@@ -1,24 +1,26 @@
 import logging
 
-from presidio_anonymizer.entities import InvalidParamException
+from presidio_anonymizer.anonymizer_parameters import Validators
 
 
-class MaskParameters:
-
+class MaskParameters(dict):
     logger = logging.getLogger("presidio-anonymizer")
 
-    def __init__(self, params: dict):
-        masking_char = params.get("masking_char")
-        chars_to_mask = params.get("chars_to_mask")
-        from_end = params.get("from_end")
+    def validate_and_normalize_fields(self):
+        Validators.validate_exists(("masking_char", "chars_to_mask", "from_end"),
+                                   self, self.get_type())
 
-    def _validate_fields(self, params):
-        for field in ("start", "end", "score", "entity_type"):
-            if content.get(field) is None:
-                self.logger.debug(f"invalid input, no field {field} for {content}")
-                raise InvalidParamException(
-                    f"Invalid input, analyzer result must contain {field}"
-                )
+    def get_masking_char(self):
+        self.get("masking_char")
 
-    def get_effective_chars_to_mask(original_text, chars_to_mask):
+    def get_chars_to_mask(self):
+        self.get("chars_to_mask")
+
+    def get_from_end(self):
+        self.get("from_end")
+
+    def get_type(self):
+        return "mask"
+
+    def get_effective_chars_to_mask(self, original_text, chars_to_mask):
         return min(len(original_text), chars_to_mask) if chars_to_mask > 0 else 0
