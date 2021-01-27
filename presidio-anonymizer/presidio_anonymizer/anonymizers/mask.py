@@ -1,8 +1,9 @@
 """Mask some or all given text entity PII with given character."""
+from presidio_anonymizer.anonymizer_parameters.mask_parameters import MaskParameters
 from presidio_anonymizer.anonymizers import Anonymizer
+from presidio_anonymizer.entities.invalid_exception import InvalidParamException
 
 
-# TODO implement + test
 class Mask(Anonymizer):
     """Mask the given text with given value."""
 
@@ -12,8 +13,11 @@ class Mask(Anonymizer):
 
         :return: The given text masked as requested
         """
-        # chars_to_replace = params.get("chars_to_replace")
-        # from_end = params.get("from_end")
-        # replace_with = params.get("replace_with")
-        # old_text = params.get("old_text")
+        mask_parameters = MaskParameters(params)
+        mask_parameters.char
+
         return ""
+
+
+def get_effective_chars_to_mask(original_text, chars_to_mask):
+    return min(len(original_text), chars_to_mask) if chars_to_mask > 0 else 0

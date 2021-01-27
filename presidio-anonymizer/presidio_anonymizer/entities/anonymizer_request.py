@@ -5,6 +5,7 @@ It get the data and validate it before the engine receives it.
 """
 import logging
 
+from presidio_anonymizer.anonymizer_parameters.mask_parameters import MaskParameters
 from presidio_anonymizer.anonymizers import FPE
 from presidio_anonymizer.anonymizers import Hash
 from presidio_anonymizer.anonymizers import Mask
@@ -18,13 +19,17 @@ from presidio_anonymizer.entities import InvalidParamException
 class AnonymizerRequest:
     """Input validation for the anonymize process."""
 
-    anonymizers = {"mask": Mask, "fpe": FPE, "replace": Replace, "hash": Hash,
-                   "redact": Redact}
+    anonymizers = {
+        "mask": (Mask, MaskParameters),
+        "fpe": FPE,
+        "replace": Replace,
+        "hash": Hash,
+        "redact": Redact,
+    }
 
     logger = logging.getLogger("presidio-anonymizer")
 
-    def __init__(self,
-                 data: dict):
+    def __init__(self, data: dict):
         """Handle and validate data for the text replacement.
 
         :param data: a map which contains the transformations, analyzer_results and text
@@ -41,13 +46,15 @@ class AnonymizerRequest:
         :param analyzer_result: the result we are going to do the transformation on
         :return: transformation
         """
-        transformation = self._transformations.get(analyzer_result.entity_type)
+        transformation, transformation_params = self._transformations.get(
+            analyzer_result.entity_type
+        )
         if not transformation:
             transformation = self._transformations.get("DEFAULT")
             if not transformation:
-                transformation = {"type": "replace", "anonymizer": Replace}
-        transformation["entity_type"] = analyzer_result.entity_type
-        return transformation
+                new_val = f"<{analyzer_result.entity_type}>"
+                return {"type": "replace", "new_value": new_val, "anonymizer": Replace}
+        return transformation, transformation_params
 
     def get_text(self):
         """Get the text we are working on."""
@@ -72,11 +79,11 @@ class AnonymizerRequest:
         analyzer_results = data.get("analyzer_results")
         if not analyzer_results:
             self.logger.debug("invalid input, json missing field: analyzer_results")
-            raise InvalidParamException("Invalid input, "
-                                        "analyzer results can not be empty")
+            raise InvalidParamException(
+                "Invalid input, " "analyzer results can not be empty"
+            )
         for analyzer_result in analyzer_results:
-            self._analysis_results.append(
-                AnalyzerResult(analyzer_result))
+            self._analysis_results.append(AnalyzerResult(analyzer_result))
 
     def __handle_transformations(self, data):
         """
@@ -113,5 +120,6 @@ class AnonymizerRequest:
         if not anonymizer_class:
             self.logger.error(f"No such anonymizer class {anonymizer_type}")
             raise InvalidParamException(
-                f"Invalid anonymizer class '{anonymizer_type}'.")
+                f"Invalid anonymizer class '{anonymizer_type}'."
+            )
         return anonymizer_class
