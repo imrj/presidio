@@ -1,6 +1,6 @@
 import pytest
 
-from anonymizer_parameters import MaskParameters
+from presidio_anonymizer.anonymizer_parameters import MaskParameters
 from presidio_anonymizer.entities import InvalidParamException
 
 

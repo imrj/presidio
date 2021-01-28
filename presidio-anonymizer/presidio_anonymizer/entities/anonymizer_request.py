@@ -19,13 +19,8 @@ from presidio_anonymizer.entities import InvalidParamException
 class AnonymizerRequest:
     """Input validation for the anonymize process."""
 
-    anonymizers = {
-        "mask": (Mask, MaskParameters),
-        "fpe": FPE,
-        "replace": Replace,
-        "hash": Hash,
-        "redact": Redact,
-    }
+    anonymizers = {"mask": Mask, "fpe": FPE, "replace": Replace, "hash": Hash,
+                   "redact": Redact}
 
     logger = logging.getLogger("presidio-anonymizer")
 
@@ -46,15 +41,13 @@ class AnonymizerRequest:
         :param analyzer_result: the result we are going to do the transformation on
         :return: transformation
         """
-        transformation, transformation_params = self._transformations.get(
-            analyzer_result.entity_type
-        )
+        transformation = self._transformations.get(analyzer_result.entity_type)
         if not transformation:
             transformation = self._transformations.get("DEFAULT")
             if not transformation:
-                new_val = f"<{analyzer_result.entity_type}>"
-                return {"type": "replace", "new_value": new_val, "anonymizer": Replace}
-        return transformation, transformation_params
+                transformation = {"type": "replace", "anonymizer": Replace}
+        transformation["entity_type"] = analyzer_result.entity_type
+        return transformation
 
     def get_text(self):
         """Get the text we are working on."""
