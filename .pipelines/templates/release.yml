@@ -32,9 +32,9 @@ jobs:
   displayName: Publish to PyPi
   dependsOn: version
   steps:
-    - template: ./publish-to-pypi.yml
-      parameters:
-        WORKING_FOLDER: 'presidio-analyzer'
+#    - template: ./publish-to-pypi.yml
+#      parameters:
+#        WORKING_FOLDER: 'presidio-analyzer'
     - template: ./publish-to-pypi.yml
       parameters:
         WORKING_FOLDER: 'presidio-anonymizer'
