@@ -148,6 +148,13 @@ stages:
                     echo analyzer status code is $ANALYZER_STATUS_CODE
                     echo anonymizer status code is $ANONYMIZER_STATUS_CODE
                 done
+          - template: .pipelines/templates/e2e-tests.yml
+            displayName: 'Run E2E integration tests on staging'
+            env:
+              ANALYZER_BASE_URL: $[ dependencies.DeployAnalyzerToDev.outputs['createStagingSlot.STAGING_URI'] ]
+              ANONYMIZER_BASE_URL: $[ dependencies.DeployAnonymizerToDev.outputs['createStagingSlot.STAGING_URI'] ]
+            parameters:
+              TEST_SUITE: 'integration'
 
       - job: SwapBothSlots
         condition: eq(dependencies.TestDeployment.result, 'Succeeded')
