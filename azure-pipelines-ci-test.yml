@@ -3,7 +3,6 @@ variables:
 
 stages:
   - stage: DeployDev
-    dependsOn: PushContainersAndE2ETests
     variables:
       REGISTRY_NAME: '$(ACR_REGISTRY_NAME).azurecr.io/'
     displayName: Deploy to Dev environment
