@@ -39,5 +39,5 @@ steps:
           ANALYZER_BASE_URL: parameters.analyzer_base_url
         ${{ if ne(parameters.anonymizer_base_url, '') }}:
           ANONYMIZER_BASE_URL: parameters.anonymizer_base_url
-        TEST_SUITE: $(test_suite)
+        TEST_SUITE:  ${{ parameters.test_suite }}
       displayName: Run tests
