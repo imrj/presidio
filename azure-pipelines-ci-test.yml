@@ -36,9 +36,8 @@ stages:
                     echo anonymizer status code is $ANONYMIZER_STATUS_CODE
                 done
           - template: .pipelines/templates/e2e-tests.yml
-            displayName: 'Run E2E integration tests on staging'
-            env:
-              ANALYZER_BASE_URL: 'https://presidio-analyzer-dev-staging.azurewebsites.net'
-              ANONYMIZER_BASE_URL: 'https://presidio-anonymizer-dev-staging.azurewebsites.net'
             parameters:
               TEST_SUITE: 'integration'
+              analyzer_base_url: 'https://presidio-analyzer-dev-staging.azurewebsites.net'
+              anonymizer_base_url: 'https://presidio-anonymizer-dev-staging.azurewebsites.net'
+

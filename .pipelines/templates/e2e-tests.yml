@@ -2,6 +2,17 @@ parameters:
   - name: TEST_SUITE
     type: string
     default: ''
+  - name: analyzer_base_url
+    type: string
+    default: ''
+  - name: anonymizer_base_url
+    type: string
+    default: ''
+env:
+  ${{ if ne(parameters.analyzer_base_url, '') }}:
+    ANALYZER_BASE_URL: parameters.analyzer_base_url
+  ${{ if ne(parameters.anonymizer_base_url, '') }}:
+    ANONYMIZER_BASE_URL: parameters.anonymizer_base_url
 steps:
     - task: DockerCompose@0
       displayName: Start Presidio Cluster
