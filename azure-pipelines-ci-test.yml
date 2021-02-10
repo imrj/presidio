@@ -36,7 +36,7 @@ stages:
                 done
           - template: .pipelines/templates/e2e-tests.yml
             parameters:
-              TEST_SUITE: 'integration'
+              test_suite: 'integration'
               analyzer_base_url: 'https://presidio-analyzer-dev-staging.azurewebsites.net'
               anonymizer_base_url: 'https://presidio-anonymizer-dev-staging.azurewebsites.net'
 
