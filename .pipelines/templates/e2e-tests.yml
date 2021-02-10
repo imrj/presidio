@@ -8,11 +8,6 @@ parameters:
   - name: anonymizer_base_url
     type: string
     default: ''
-env:
-  ${{ if ne(parameters.analyzer_base_url, '') }}:
-    ANALYZER_BASE_URL: parameters.analyzer_base_url
-  ${{ if ne(parameters.anonymizer_base_url, '') }}:
-    ANONYMIZER_BASE_URL: parameters.anonymizer_base_url
 steps:
     - task: DockerCompose@0
       displayName: Start Presidio Cluster
@@ -39,4 +34,9 @@ steps:
           source env/bin/activate
           if [ -z ${TEST_SUITE} ]; then pytest -v; else pytest -v -m ${TEST_SUITE}; fi
       workingDirectory: e2e-tests
+      env:
+        ${{ if ne(parameters.analyzer_base_url, '') }}:
+          ANALYZER_BASE_URL: parameters.analyzer_base_url
+        ${{ if ne(parameters.anonymizer_base_url, '') }}:
+          ANONYMIZER_BASE_URL: parameters.anonymizer_base_url
       displayName: Run tests
